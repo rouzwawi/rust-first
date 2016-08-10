@@ -1,0 +1,34 @@
+[package]
+name = "first"
+version = "0.0.1"
+authors = [ "Rouzbeh Delavari <rouzwawi@gmail.com>" ]
+
+
+[features]
+# The default set of optional packages. Most people will want to use these
+# packages, but they are strictly optional. Note that `session` is not a package
+# but rather another feature listed in this manifest.
+default = ["disp-name"]
+
+# A feature with no dependencies is used mainly for conditional compilation,
+# like `#[cfg(feature = "disp-name")]`.
+disp-name = []
+disp-uri = []
+
+[[bin]]
+name = "hello"
+
+
+[dependencies]
+rustc-serialize = "0.3.19"
+
+[dependencies.hyper]
+version = "0.9"
+default-features = false
+features = ["security-framework"]
+
+[dependencies.clap]
+version = "2.10.0"
+
+# Cherry-pick the features you'd like to use
+features = [ "suggestions", "color", "unstable" ]
