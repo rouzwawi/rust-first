@@ -3,12 +3,15 @@
 
 extern crate rustc_serialize;
 
-pub mod workflow;
+mod workflow;
 
 #[cfg(feature = "disp-name")]
 mod display_name;
 #[cfg(feature = "disp-uri")]
 mod display_uri;
+
+pub use self::workflow::*;
+
 
 /// Represents a tree, see [`Tree::node`] and [`Tree::leaf`] functions
 /// [`Tree::node`]: ./enum.Tree.html#method.node

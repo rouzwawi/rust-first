@@ -13,7 +13,6 @@ use hyper::client::Response;
 use rustc_serialize::json;
 
 use first::*;
-use first::workflow::Workflow;
 
 
 fn is_conf(val: String) -> Result<(), String> {
