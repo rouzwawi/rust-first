@@ -5,6 +5,6 @@ use workflow;
 
 impl Display for workflow::Workflow {
     fn fmt(&self, formatter: &mut Formatter) -> Result<(), Error> {
-        write!(formatter, "Workflow: {} {}", self.component_id, self.endpoint_id)
+        write!(formatter, "Workflow: {} {}", self.component_id, self.workflow_id)
     }
 }

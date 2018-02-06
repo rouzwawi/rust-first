@@ -1,22 +1,19 @@
-#[derive(RustcDecodable, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Workflow {
-    pub component_uri: String,
     pub component_id: String,
-    pub endpoint_id: String,
-    pub schedule: Schedule,
+    pub workflow_id: String,
+    pub configuration: Configuration,
 }
 
-#[derive(RustcDecodable, Debug)]
-pub struct Schedule {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Configuration {
     pub id: String,
-    pub partitioning: String,
+    pub schedule: String,
+    pub offset: Option<String>,
+    pub docker_termination_logging: bool,
     pub docker_image: Option<String>,
     pub docker_args: Option<Vec<String>>,
-    pub secret: Option<Secret>,
-}
-
-#[derive(RustcDecodable, Debug)]
-pub struct Secret {
-    pub name: String,
-    pub mount_path: String,
+    pub commit_sha: Option<String>,
+    pub service_account: Option<String>,
+    pub resources: Vec<String>,
 }

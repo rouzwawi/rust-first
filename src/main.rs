@@ -3,14 +3,10 @@
 
 #[macro_use]
 extern crate clap;
-extern crate hyper;
-extern crate rustc_serialize;
+extern crate reqwest;
+extern crate serde;
+extern crate serde_json;
 extern crate first;
-
-use hyper::client::Client;
-use hyper::client::Response;
-
-use rustc_serialize::json;
 
 use first::*;
 
@@ -52,7 +48,7 @@ fn main() {
 
             // * -> required
             (@arg component: * "Component id")
-            (@arg endpoint: * "Endpoint id")
+            (@arg workflow: * "Workflow id")
         )
     ).get_matches();
 
@@ -72,7 +68,7 @@ fn main() {
     ]);
 
     if let Some(sub_json) = matches.subcommand_matches("json") {
-        let json = json::encode(&tree).unwrap();
+        let json = serde_json::to_string(&tree).unwrap();
         println!("{}", json);
 
     } else if let Some(sub_tree) = matches.subcommand_matches("tree") {
@@ -81,27 +77,21 @@ fn main() {
         print_tree(&tree);
 
     } else if let Some(sub_workflow) = matches.subcommand_matches("workflow") {
-        use std::io::Read;
-
         let component_id = sub_workflow.value_of("component").unwrap();
-        let endpoint_id = sub_workflow.value_of("endpoint").unwrap();
+        let workflow_id = sub_workflow.value_of("workflow").unwrap();
 
-        let client = Client::new();
-        let mut response: Response = client
-            .get(&workflow_url(component_id, endpoint_id))
-            .send().unwrap();
+        let url = workflow_url(component_id, workflow_id);
+        let mut response = reqwest::get(&url).unwrap();
 
-        if response.status != hyper::Ok {
-            println!("Service returned {}", response.status);
+        if !response.status().is_success() {
+            println!("Service returned {}", response.status());
             std::process::exit(2);
         }
 
-        let mut buffer = String::new();
-        response.read_to_string(&mut buffer).unwrap();
-        match json::decode::<Workflow>(&buffer) {
+        let json: String = response.text().unwrap();
+        match serde_json::from_str::<Workflow>(&json) {
             Ok(workflow) => println!("{:#?}", workflow),
             Err(err)     => println!("{:?}", err),
         }
-
     }
 }

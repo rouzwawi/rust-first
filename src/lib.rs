@@ -1,7 +1,8 @@
 //! Bla bla
 //! Bla bla bla
 
-extern crate rustc_serialize;
+#[macro_use]
+extern crate serde_derive;
 
 mod workflow;
 
@@ -16,7 +17,7 @@ pub use self::workflow::*;
 /// Represents a tree, see [`Tree::node`] and [`Tree::leaf`] functions
 /// [`Tree::node`]: ./enum.Tree.html#method.node
 /// [`Tree::leaf`]: ./enum.Tree.html#method.leaf
-#[derive(Clone, Debug, RustcEncodable)]
+#[derive(Clone, Debug, Serialize)]
 pub enum Tree {
     Leaf(String),
     Node(String, Vec<Tree>),
@@ -108,6 +109,6 @@ impl std::str::FromStr for Foo {
     }
 }
 
-pub fn workflow_url(component_id: &str, endpoint_id: &str) -> String {
-    format!("http://styx.spotify.net/api/v0/workflows/{}/{}", component_id, endpoint_id)
+pub fn workflow_url(component_id: &str, workflow_id: &str) -> String {
+    format!("https://styx.spotify.net/api/v3/workflows/{}/{}", component_id, workflow_id)
 }
